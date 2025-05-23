@@ -1,1 +1,577 @@
 @import "tailwindcss";
+
+@theme {
+	/* Бежево-коричневая военная цветовая схема */
+	--color-background: #e5d9c8; /* Светло-бежевый фон */
+	--color-foreground: #3a4a3a; /* Темно-коричневый текст */
+	--color-card: #f0e9dc; /* Очень светло-бежевая карточка */
+	--color-card-foreground: #3a4a3a; /* Темно-коричневый текст карточки */
+	--color-popover: #f0e9dc; /* Очень светло-бежевый попап */
+	--color-popover-foreground: #3a4a3a; /* Темно-коричневый текст попапа */
+	--color-primary: #8c6d4d; /* Коричневый основной */
+	--color-primary-foreground: #f0e9dc; /* Светло-бежевый текст основного */
+	--color-secondary: #d1c2ac; /* Светло-коричневый вторичный */
+	--color-secondary-foreground: #3a4a3a; /* Темно-коричневый текст вторичного */
+	--color-muted: #d8ccc1; /* Приглушенный светло-коричневый */
+	--color-muted-foreground: #7a7668; /* Коричневый приглушенный текст */
+	--color-accent: #b56d4e; /* Теплый коричневый акцент */
+	--color-accent-foreground: #f0e9dc; /* Светло-бежевый текст акцента */
+	--color-destructive: #cc6666; /* Умеренно-красный разрушительный */
+	--color-destructive-foreground: #f0e9dc; /* Светло-бежевый текст разрушительного */
+	--color-border: #c9b8a1; /* Светло-коричневая граница */
+	--color-input: #e0d5c6; /* Светло-бежевый инпут */
+	--color-ring: #b56d4e; /* Коричневое кольцо фокуса */
+
+	/* Дополнительные военные цвета */
+	--color-war-khaki: #c4b48d; /* Светлый хаки */
+	--color-war-olive: #8e9e7e; /* Светлый оливковый */
+	--color-war-steel: #9aaeb5; /* Светлый стальной */
+	--color-war-brass: #d9c37e; /* Светлый латунный */
+	--color-war-blood: #cc6666; /* Умеренно-красный */
+}
+
+body {
+	font-family: "Courier New", "Liberation Mono", monospace;
+	background-image: radial-gradient(
+			circle at 25% 25%,
+			hsl(var(--war-khaki) / 0.1) 0%,
+			transparent 50%
+		),
+		radial-gradient(
+			circle at 75% 75%,
+			hsl(var(--war-olive) / 0.1) 0%,
+			transparent 50%
+		);
+}
+
+/* Стили для бумажной карты с улучшенной четкостью контуров */
+.leaflet-container {
+	background: linear-gradient(
+		135deg,
+		#f5e6d3 0%,
+		#e8d5b7 25%,
+		#f0e1c1 50%,
+		#ede0c8 75%,
+		#f2e4d0 100%
+	);
+	filter: sepia(0.3) contrast(1.2) brightness(1.0) saturate(0.8);
+	position: relative;
+}
+
+/* Стили для четких слоев карты */
+.leaflet-tile-pane .base-map-layer {
+	filter: contrast(1.3) brightness(0.9);
+}
+
+.leaflet-tile-pane .borders-layer {
+	filter: contrast(2.0) brightness(0.8) saturate(0);
+	mix-blend-mode: multiply;
+}
+
+.leaflet-tile-pane .carto-borders {
+	filter: contrast(1.8) brightness(0.7);
+	mix-blend-mode: overlay;
+}
+
+.leaflet-tile-pane .watercolor-layer {
+	filter: contrast(0.8) brightness(1.2) sepia(0.4);
+}
+
+.leaflet-tile-pane .labels-layer {
+	filter: contrast(1.6) brightness(0.6);
+	text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.leaflet-tile-pane .russian-labels-layer {
+	filter: contrast(1.8) brightness(0.5) saturate(0);
+	mix-blend-mode: multiply;
+	text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.9);
+}
+
+/* Добавляем текстуру карты-бумаги поверх карты */
+.leaflet-container::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	/* Основная текстура карты-бумаги */
+	background: url("/kartabumaga.png"), /* Дополнительные эффекты старения */
+		radial-gradient(
+			circle at 20% 30%,
+			rgba(139, 119, 101, 0.03) 0%,
+			transparent 40%
+		),
+		radial-gradient(
+			circle at 80% 70%,
+			rgba(160, 140, 120, 0.02) 0%,
+			transparent 35%
+		),
+		radial-gradient(
+			circle at 40% 80%,
+			rgba(120, 100, 80, 0.015) 0%,
+			transparent 30%
+		), /* Общий тон старой бумаги */
+		linear-gradient(
+			0deg,
+			rgba(245, 235, 220, 0.08) 0%,
+			rgba(250, 240, 225, 0.05) 100%
+		);
+	background-size: cover, auto, auto, auto, auto;
+	background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+	background-position: center, 20% 30%, 80% 70%, 40% 80%, center;
+	pointer-events: none;
+	z-index: 1000;
+	mix-blend-mode: multiply;
+	opacity: 0.7;
+}
+
+/* Дополнительный слой для эффекта состаренности с уменьшенной интенсивностью */
+.leaflet-container::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	/* Случайные пятна */
+	background: radial-gradient(
+			circle at 15% 25%,
+			rgba(101, 67, 33, 0.08) 0%,
+			transparent 12%
+		),
+		radial-gradient(
+			circle at 85% 15%,
+			rgba(139, 119, 101, 0.06) 0%,
+			transparent 10%
+		),
+		radial-gradient(
+			circle at 25% 85%,
+			rgba(160, 140, 120, 0.05) 0%,
+			transparent 8%
+		),
+		radial-gradient(
+			circle at 75% 75%,
+			rgba(120, 100, 80, 0.07) 0%,
+			transparent 14%
+		),
+		radial-gradient(
+			circle at 50% 40%,
+			rgba(180, 160, 140, 0.04) 0%,
+			transparent 6%
+		), /* Дополнительные пятна для усиления текстуры */
+		radial-gradient(
+			circle at 10% 60%,
+			rgba(101, 67, 33, 0.03) 0%,
+			transparent 8%
+		),
+		radial-gradient(
+			circle at 90% 40%,
+			rgba(139, 119, 101, 0.04) 0%,
+			transparent 10%
+		),
+		radial-gradient(
+			circle at 60% 10%,
+			rgba(160, 140, 120, 0.025) 0%,
+			transparent 6%
+		),
+		radial-gradient(
+			circle at 30% 90%,
+			rgba(120, 100, 80, 0.035) 0%,
+			transparent 9%
+		);
+	pointer-events: none;
+	z-index: 1001;
+	mix-blend-mode: darken;
+}
+
+/* Стили для попапов в военном стиле */
+.leaflet-popup-content-wrapper {
+	background: hsl(var(--card));
+	color: hsl(var(--card-foreground));
+	border: 2px solid hsl(var(--war-brass));
+	border-radius: 4px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0
+		hsl(var(--war-brass) / 0.3);
+	font-family: "Courier New", monospace;
+	position: relative;
+}
+
+.leaflet-popup-content-wrapper::before {
+	content: "";
+	position: absolute;
+	top: -2px;
+	left: -2px;
+	right: -2px;
+	bottom: -2px;
+	background: linear-gradient(
+		45deg,
+		hsl(var(--war-brass)) 0%,
+		hsl(var(--war-steel)) 50%,
+		hsl(var(--war-brass)) 100%
+	);
+	border-radius: 6px;
+	z-index: -1;
+}
+
+.leaflet-popup-tip {
+	background: hsl(var(--card));
+	border: 1px solid hsl(var(--war-brass));
+}
+
+/* Военные кнопки управления картой */
+.leaflet-control-zoom a {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--war-steel)) 0%,
+		hsl(var(--card)) 50%,
+		hsl(var(--war-steel)) 100%
+	);
+	color: hsl(var(--card-foreground));
+	border: 2px solid hsl(var(--war-brass));
+	border-radius: 4px;
+	font-weight: bold;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+	transition: all 0.2s ease;
+}
+
+.leaflet-control-zoom a:hover {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--accent)) 0%,
+		hsl(var(--war-blood)) 50%,
+		hsl(var(--accent)) 100%
+	);
+	color: hsl(var(--accent-foreground));
+	border-color: hsl(var(--accent));
+	transform: translateY(-1px);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.leaflet-control-attribution {
+	background: hsl(var(--card) / 0.9);
+	color: hsl(var(--muted-foreground));
+	border: 1px solid hsl(var(--border));
+	border-radius: 4px;
+	font-family: "Courier New", monospace;
+	font-size: 10px;
+}
+
+/* Военные маркеры событий */
+.war-event-marker {
+	background: radial-gradient(
+		circle,
+		hsl(var(--accent)) 0%,
+		hsl(var(--war-blood)) 70%,
+		hsl(var(--destructive)) 100%
+	);
+	border: 3px solid hsl(var(--war-brass));
+	border-radius: 50%;
+	box-shadow: 0 0 15px hsl(var(--accent) / 0.6), inset 0 2px 4px
+		rgba(255, 255, 255, 0.2), inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+	position: relative;
+	animation: warPulse 2s infinite ease-in-out;
+}
+
+.war-event-marker::before {
+	content: "★";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: hsl(var(--war-brass));
+	font-size: 12px;
+	font-weight: bold;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.war-event-marker:hover {
+	transform: scale(1.1);
+	box-shadow: 0 0 20px hsl(var(--accent) / 0.8), inset 0 2px 4px
+		rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Анимация пульсации для маркеров */
+@keyframes warPulse {
+	0%,
+	100% {
+		box-shadow: 0 0 15px hsl(var(--accent) / 0.6), inset 0 2px 4px
+			rgba(255, 255, 255, 0.2), inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+	}
+	50% {
+		box-shadow: 0 0 25px hsl(var(--accent) / 0.8), inset 0 2px 4px
+			rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+	}
+}
+
+/* Стили для различных типов событий */
+.war-event-marker.battle {
+	background: radial-gradient(
+		circle,
+		hsl(var(--accent)) 0%,
+		hsl(var(--war-blood)) 100%
+	);
+}
+
+.war-event-marker.victory {
+	background: radial-gradient(
+		circle,
+		hsl(var(--war-brass)) 0%,
+		hsl(var(--war-khaki)) 100%
+	);
+}
+
+.war-event-marker.defense {
+	background: radial-gradient(
+		circle,
+		hsl(var(--war-steel)) 0%,
+		hsl(var(--war-olive)) 100%
+	);
+}
+
+/* Скроллбар в военном стиле */
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: hsl(var(--muted));
+	border: 1px solid hsl(var(--border));
+}
+
+::-webkit-scrollbar-thumb {
+	background: linear-gradient(
+		180deg,
+		hsl(var(--war-brass)) 0%,
+		hsl(var(--war-steel)) 50%,
+		hsl(var(--war-brass)) 100%
+	);
+	border-radius: 4px;
+	border: 1px solid hsl(var(--border));
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(
+		180deg,
+		hsl(var(--accent)) 0%,
+		hsl(var(--war-blood)) 50%,
+		hsl(var(--accent)) 100%
+	);
+}
+
+/* Эффект старой бумаги для карточек */
+.war-card {
+	background: hsl(var(--card));
+	border: 2px solid hsl(var(--war-brass));
+	border-radius: 8px;
+	position: relative;
+	overflow: hidden;
+}
+
+.war-card::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: radial-gradient(
+			circle at 20% 20%,
+			hsl(var(--war-khaki) / 0.1) 0%,
+			transparent 30%
+		),
+		radial-gradient(
+			circle at 80% 80%,
+			hsl(var(--war-olive) / 0.1) 0%,
+			transparent 30%
+		),
+		radial-gradient(
+			circle at 40% 60%,
+			hsl(var(--war-brass) / 0.05) 0%,
+			transparent 20%
+		);
+	pointer-events: none;
+}
+
+/* Военный заголовок */
+.war-title {
+	font-family: "Courier New", monospace;
+	font-weight: bold;
+	color: hsl(var(--accent));
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+/* Военная дата */
+.war-date {
+	font-family: "Courier New", monospace;
+	color: hsl(var(--war-brass));
+	font-weight: bold;
+	background: hsl(var(--war-steel) / 0.3);
+	padding: 2px 6px;
+	border-radius: 4px;
+	border: 1px solid hsl(var(--war-brass) / 0.5);
+}
+
+/* Стили для маркеров городов */
+.city-marker {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--war-brass)) 0%,
+		hsl(var(--war-khaki)) 50%,
+		hsl(var(--war-brass)) 100%
+	);
+	border: 2px solid hsl(var(--war-steel));
+	border-radius: 4px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 2px
+		rgba(255, 255, 255, 0.3);
+	position: relative;
+	font-family: "Courier New", monospace;
+	font-size: 10px;
+	font-weight: bold;
+	color: hsl(var(--background));
+	text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+	padding: 2px 4px;
+	white-space: nowrap;
+	transition: all 0.2s ease;
+}
+
+.city-marker:hover {
+	transform: scale(1.05);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 2px
+		rgba(255, 255, 255, 0.4);
+	background: linear-gradient(
+		135deg,
+		hsl(var(--accent)) 0%,
+		hsl(var(--war-blood)) 50%,
+		hsl(var(--accent)) 100%
+	);
+	color: hsl(var(--accent-foreground));
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Различные типы городов */
+.city-marker.capital {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--accent)) 0%,
+		hsl(var(--war-blood)) 50%,
+		hsl(var(--accent)) 100%
+	);
+	color: hsl(var(--accent-foreground));
+	border-color: hsl(var(--war-brass));
+	font-size: 11px;
+	padding: 3px 6px;
+}
+
+.city-marker.strategic {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--war-steel)) 0%,
+		hsl(var(--war-olive)) 50%,
+		hsl(var(--war-steel)) 100%
+	);
+	color: hsl(var(--foreground));
+	border-color: hsl(var(--war-brass));
+}
+
+.city-marker.industrial {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--war-khaki)) 0%,
+		hsl(var(--war-olive)) 50%,
+		hsl(var(--war-khaki)) 100%
+	);
+	color: hsl(var(--background));
+	border-color: hsl(var(--war-steel));
+}
+
+/* Стили для маркеров городов на карте */
+.war-city-marker {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--war-brass)) 0%,
+		hsl(var(--war-khaki)) 50%,
+		hsl(var(--war-brass)) 100%
+	);
+	border: 2px solid hsl(var(--war-steel));
+	border-radius: 50%;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 2px
+		rgba(255, 255, 255, 0.3);
+	position: relative;
+	transition: all 0.2s ease;
+}
+
+.war-city-marker::before {
+	content: "●";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: hsl(var(--background));
+	font-size: 8px;
+	font-weight: bold;
+	text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.war-city-marker:hover {
+	transform: scale(1.1);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 2px
+		rgba(255, 255, 255, 0.4);
+}
+
+/* Различные типы городов на карте */
+.war-city-marker.capital {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--accent)) 0%,
+		hsl(var(--war-blood)) 50%,
+		hsl(var(--accent)) 100%
+	);
+	border-color: hsl(var(--war-brass));
+	box-shadow: 0 0 12px hsl(var(--accent) / 0.6), inset 0 1px 2px
+		rgba(255, 255, 255, 0.3);
+}
+
+.war-city-marker.capital::before {
+	content: "★";
+	color: hsl(var(--war-brass));
+	font-size: 10px;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.war-city-marker.strategic {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--war-steel)) 0%,
+		hsl(var(--war-olive)) 50%,
+		hsl(var(--war-steel)) 100%
+	);
+	border-color: hsl(var(--war-brass));
+}
+
+.war-city-marker.strategic::before {
+	content: "▲";
+	color: hsl(var(--war-brass));
+	font-size: 8px;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.war-city-marker.industrial {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--war-khaki)) 0%,
+		hsl(var(--war-olive)) 50%,
+		hsl(var(--war-khaki)) 100%
+	);
+	border-color: hsl(var(--war-steel));
+}
+
+.war-city-marker.industrial::before {
+	content: "■";
+	color: hsl(var(--background));
+	font-size: 8px;
+	text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+}

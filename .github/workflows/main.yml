@@ -48,7 +48,7 @@ jobs:
       
       - name: SSH into server and deploy
         run: |
-          ssh -o StrictHostKeyChecking=no -i server_key.pem alan@${{ secrets.SERVER_IP }} "cd /home/alan/ && \
+          ssh -o StrictHostKeyChecking=no -i server_key.pem alan@${{ secrets.SERVER_IP }} "cd /home/alan/win-thread && \
             docker-compose pull && \
             docker-compose down && \
             docker-compose up -d && \

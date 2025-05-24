@@ -1,27 +1,9 @@
 import { create } from "zustand";
+import type { EventVeteransGraph } from "../../../../entities/event/model";
 import type { IGraphData, INode } from "../../../../widgets/graph";
 
-// Mock data for testing
-const mockVeteransGraphData = {
-	nodes: [
-		{ id: 1, name: "Иван Петров" },
-		{ id: 2, name: "Сергей Иванов" },
-		{ id: 3, name: "Алексей Смирнов" },
-		{ id: 4, name: "Михаил Кузнецов" },
-	],
-	connections: [
-		{ source: 1, target: 2 },
-		{ source: 2, target: 1 },
-		{ source: 2, target: 3 },
-		{ source: 3, target: 2 },
-		{ source: 3, target: 4 },
-		{ source: 4, target: 3 },
-	],
-};
-
 // Format the graph data for the graph component
-const formatGraphData = (): IGraphData => {
-	const rawData = mockVeteransGraphData;
+const formatGraphData = (rawData: EventVeteransGraph): IGraphData => {
 	return {
 		nodes: rawData.nodes.map((node) => ({
 			id: node.id.toString(),
@@ -36,18 +18,32 @@ const formatGraphData = (): IGraphData => {
 	};
 };
 
+// Create empty graph data
+const createEmptyGraphData = (): IGraphData => {
+	return {
+		nodes: [],
+		links: [],
+	};
+};
+
 // Define the store state type
 interface GraphState {
 	graphData: IGraphData;
 	selectedNode: INode | null;
+	setGraphData: (data: EventVeteransGraph) => void;
 	handleNodeClick: (node: INode) => void;
 	clearSelectedNode: () => void;
 }
 
 // Create the store
 export const useGraphStore = create<GraphState>((set) => ({
-	graphData: formatGraphData(),
+	graphData: createEmptyGraphData(),
 	selectedNode: null,
+
+	// Set graph data from API
+	setGraphData: (data: EventVeteransGraph) => {
+		set({ graphData: formatGraphData(data) });
+	},
 
 	// Handle node click
 	handleNodeClick: (node: INode) => {

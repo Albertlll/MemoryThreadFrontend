@@ -1,6 +1,4 @@
-import { AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
-import type { FormEvent } from "react";
 import type { Place } from "../../../entities/place/model";
 import { httpClient } from "../../../shared/api";
 import { Modal } from "../../../shared/ui/Modal/Modal";

@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-	ImageOverlay,
-	MapContainer,
-	Marker,
-	Popup,
-	TileLayer,
-	useMap,
-} from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import type { LatLngBounds, LatLngExpression } from "leaflet";
+import type { LatLngExpression } from "leaflet";
 import { Link } from "react-router";
 import type { Place } from "../../../entities/place";
 // import kartabumaga from "./kartabumaga.png";

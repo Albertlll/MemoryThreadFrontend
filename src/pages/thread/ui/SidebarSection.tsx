@@ -1,18 +1,11 @@
 import { memo } from "react";
+import type { Veteran } from "../../../entities/veteran/model";
 import type { INode } from "../../../widgets/graph";
 import { VeteranInfoSidebar } from "./VeteranInfoSidebar";
 
-// Updated Veteran interface to match the new API response format
-interface VeteranInfo {
-	id: number;
-	name: string;
-	biography: string;
-	image_url: string;
-}
-
 interface SidebarSectionProps {
 	selectedNode: INode | null;
-	veteranData: VeteranInfo | null;
+	veteranData: Veteran | null;
 	veteranLoading: boolean;
 	veteranError: string | null;
 	onClose: () => void;

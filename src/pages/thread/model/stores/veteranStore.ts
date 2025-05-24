@@ -1,17 +1,11 @@
 import { create } from "zustand";
+import { veteranApi } from "../../../../entities/veteran/api";
+import type { Veteran } from "../../../../entities/veteran/model";
 import { useGraphStore } from "./graphStore";
-
-// Updated Veteran interface to match the new API response format
-interface VeteranInfo {
-	id: number;
-	name: string;
-	biography: string;
-	image_url: string;
-}
 
 // Define the store state type
 interface VeteranState {
-	veteranData: VeteranInfo | null;
+	veteranData: Veteran | null;
 	veteranLoading: boolean;
 	veteranError: string | null;
 	fetchVeteranData: (nodeId: string) => Promise<void>;
@@ -35,12 +29,8 @@ export const useVeteranStore = create<VeteranState>((set) => ({
 				throw new Error("Invalid veteran ID");
 			}
 
-			// Используем прямой запрос к API для получения данных в новом формате
-			const response = await fetch(`/veterans/${veteranId}`);
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			const data = await response.json();
+			// Используем veteranApi для получения данных
+			const data = await veteranApi.getById(veteranId);
 			set({ veteranData: data, veteranLoading: false });
 		} catch (err) {
 			console.error("Error fetching veteran data:", err);

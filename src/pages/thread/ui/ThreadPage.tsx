@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { eventApi } from "../../../entities/event";
-import { initVeteranStoreSubscription } from "../model";
+import { initVeteranStoreSubscription, useGraphStore } from "../model";
 import { ThreadPageContent } from "./ThreadPageContent";
 
 // Initialize the subscription between stores
@@ -14,6 +14,7 @@ export const ThreadPage = memo(() => {
 	const { id } = useParams<{ id: string }>();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const { setGraphData } = useGraphStore();
 
 	// Fetch veterans graph data on component mount
 	useEffect(() => {
@@ -24,7 +25,8 @@ export const ThreadPage = memo(() => {
 				setLoading(true);
 				const data = await eventApi.getVeteransGraph(id);
 				console.log(data);
-				// We would set the graph data here in a real app
+				// Set the graph data in the store
+				setGraphData(data);
 				setError(null);
 			} catch (err) {
 				console.error("Error fetching veterans graph:", err);
@@ -35,7 +37,7 @@ export const ThreadPage = memo(() => {
 		};
 
 		fetchVeteransGraph();
-	}, [id]);
+	}, [id, setGraphData]);
 
 	// If loading or error, show appropriate message
 	if (loading)

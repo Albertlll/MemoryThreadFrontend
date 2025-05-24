@@ -30,6 +30,13 @@
 	--color-war-blood: #cc6666; /* Умеренно-красный */
 }
 
+#root,
+body,
+html {
+	height: 100%;
+	width: 100%;
+}
+
 body {
 	font-family: "Courier New", "Liberation Mono", monospace;
 	background-image: radial-gradient(

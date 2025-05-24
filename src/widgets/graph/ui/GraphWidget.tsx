@@ -1,34 +1,35 @@
-import { useState } from "react";
-import { Canvas } from "./Canvas";
+import { memo, useCallback, useRef } from "react";
 import type { IGraphData, INode } from "../model";
+import { Canvas, type CanvasRef } from "./Canvas";
 
 interface GraphWidgetProps {
-  data: IGraphData;
-  onNodeClick?: (node: INode) => void;
-  className?: string;
+	data: IGraphData;
+	onNodeClick?: (node: INode) => void;
+	className?: string;
 }
 
-export const GraphWidget = ({ data, onNodeClick, className = "" }: GraphWidgetProps) => {
-  const [selectedNode, setSelectedNode] = useState<INode | null>(null);
+// Используем React.memo для предотвращения ререндера при неизменившихся пропсах
+export const GraphWidget = memo(
+	({ data, onNodeClick, className = "" }: GraphWidgetProps) => {
+		const canvasRef = useRef<CanvasRef>(null);
 
-  const handleNodeClick = (node: INode) => {
-    setSelectedNode(node);
-    if (onNodeClick) {
-      onNodeClick(node);
-    }
-  };
+		const handleNodeClick = useCallback(
+			(node: INode) => {
+				// Вызываем внешний обработчик, если он предоставлен
+				if (onNodeClick) {
+					onNodeClick(node);
+				}
+			},
+			[onNodeClick],
+		);
 
-  return (
-    <div className={`relative w-full h-full ${className}`}>
-      <Canvas data={data} onNodeClick={handleNodeClick} />
-      
-      {/* Optional: Add a panel to display selected node information */}
-      {selectedNode && (
-        <div className="absolute top-4 right-4 bg-white p-4 rounded shadow-lg max-w-xs">
-          <h3 className="text-lg font-bold mb-2">{selectedNode.name || selectedNode.id}</h3>
-          {/* Add more node details here as needed */}
-        </div>
-      )}
-    </div>
-  );
-};
+		return (
+			<div className={`relative w-full h-full ${className}`}>
+				<Canvas ref={canvasRef} data={data} onNodeClick={handleNodeClick} />
+			</div>
+		);
+	},
+);
+
+// Добавляем отображаемое имя для компонента (полезно для отладки)
+GraphWidget.displayName = "GraphWidget";
